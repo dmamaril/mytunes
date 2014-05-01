@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyTunes</title>
+
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/mytunes.css" rel="stylesheet">
+
+  </head>
   <body>
-    <!-- Scripts may be placed anywhere on a page. But FYI, they block rendering of elements
+    <h1>My Tunes</h1><h5>Made with Backbone.js</h5>
+    <small><a href="http://www.donmamaril.io">donmamaril.io</a></small>
+
+
+    <div class="container"> </div>
+
+    <div class="queue"> </div>
+      <!-- Scripts may be placed anywhere on a page. But FYI, they block rendering of elements
      below them until after the scripts load-->
     <script src="bower_components/jquery/jquery.min.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
     <script src="data/data.js"></script>
 
+
+    <!-- 
     <script src="models/SongModel.js"></script>
     <script src="collections/Songs.js"></script>
     <script src="collections/SongQueue.js"></script>
@@ -19,20 +40,13 @@
     <script src="views/LibraryEntryView.js"></script>
     <script src="views/AppView.js"></script>
     <script src="views/SongQueueView.js"></script>
-    <script src="views/SongQueueEntryView.js"></script>
+    <script src="views/SongQueueEntryView.js"></script> -->
 
-    <script>
-      $(function(){
-        // set up model objects
-        var library = new Songs(songData);
-        var app = new AppModel({library: library});
 
-        // build a view for the top level of the whole app
-        var appView = new AppView({model: app});
 
-        // put the view onto the screen
-        $('body').append(appView.render());
-      });
-    </script>
+    <!-- BACKBONE BAREBONE SCRIPT -->
+    <script src="backBone/App.js"></script>
+    <script src="backBone/AppModel.js"></script>
+
   </body>
 </html>
