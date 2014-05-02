@@ -1,4 +1,5 @@
 var SongModel = Backbone.Model.extend({
+  
   enqueue: function () {
     this.trigger('enqueue', this);
   },
@@ -20,8 +21,7 @@ var Library = Backbone.Collection.extend({
   model: SongModel,
   initialize: function () {
     console.log('Initializing Library...');
-    this.add(songData);
-    console.log('Library Collection Set!');
+    // console.log('Library Collection Set!');
   }
 });
 
@@ -39,15 +39,11 @@ var SongQueue = Backbone.Collection.extend({
 
   initialize: function (blah, options) {
     queue = this;
-
-    options.parent.on('play', function (song) {
-      if (this.length >= 1) { this.playFirst(); }
-    }, this);
-
-
-    options.parent.on('enqueue', function (song) { 
-      queue.add(song);
-    }, this);
+    this.on('add', function(){
+      if(this.length === 1){
+        this.playFirst();
+      }
+    });
 
     options.parent.on('dequeue', function (song) {
       queue.remove(song);
@@ -55,12 +51,14 @@ var SongQueue = Backbone.Collection.extend({
     }, this);
 
     options.parent.on('ended', function () {
+      console.log('Shifting!');
       this.shift();
       if (this.length >= 1) { this.playFirst(); }
     }, this);
   },
 
-  playFirst: function () { this.at(0).play(); }
+  playFirst: function () { 
+    this.at(0).play(); }
 
 });
 
@@ -73,11 +71,18 @@ var SongQueue = Backbone.Collection.extend({
 
 
 var App = Backbone.Model.extend({
-  initialize: function () {
+  initialize: function (library) {
     this.set('currentSong', new SongModel())
-    this.set('library', new Library());
     this.set('songQueue', new SongQueue(null, {parent: this.get('library')} ));
 
+    library.library.on('play', function (song) {
+      this.set('currentSong', song);
+    }, this);
+
+    library.library.on('enqueue', function (song) {
+      this.get('songQueue').add(song);
+      // console.log('Horray!', this.get('songQueue'));
+    }, this)
   }
 });
 

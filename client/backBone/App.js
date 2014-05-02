@@ -7,7 +7,7 @@ var EntryView = Backbone.View.extend({
 
   addToQueue: function () {
     this.model.enqueue();
-    this.model.play();
+    // this.model.play();
   },
 
   render: function () {
@@ -66,7 +66,7 @@ var SongQueueView = Backbone.View.extend({
 
   initialize: function () {
     this.collection.on('add', this.render, this);
-    this.collection.on('remove', this.render, this);
+    this.collection.on('shift', this.render, this);
   },
 
   render: function () {
@@ -87,7 +87,7 @@ var SongQueueView = Backbone.View.extend({
 // ----------------------------------------------------------------------------------------
 
 
-
+// PlayerView.js - Defines a backbone view class for the music player.
 var PlayerView = Backbone.View.extend({
 
   // HTML5 (native) audio tag is being used
@@ -95,13 +95,16 @@ var PlayerView = Backbone.View.extend({
   el: '<audio controls autoplay />',
 
   setSong: function(song){
+    this.model = song;
     this.$el.on('ended', function () {
+      console.log('Song is done');
+      // debugger;
       song.trigger('ended', this);
-      this.render();
-    }, this);
+    })
+    this.render();
   },
 
-  render: function() {
+  render: function(){
     return this.$el.attr('src', this.model ? this.model.get('url') : '');
   }
 
@@ -115,20 +118,24 @@ var PlayerView = Backbone.View.extend({
 // ----------------------------------------------------------------------------------------
 
 var AppView = Backbone.View.extend({
+
   initialize: function(whatIsThis) {
-    this.playerView = new PlayerView({ model: this.model.get('currentSong') });
+    this.playerView = new PlayerView({model: this.model.get('currentSong')});
     this.libraryView = new LibraryView({ collection: this.model.get('library') });
     this.songQueueView = new SongQueueView({ collection: this.model.get('songQueue') });
 
     this.model.on('change:currentSong', function(model){
-      this.playerView.setSong(model.get('currentSong'));
+      console.log('Yey Im on Views!')
+      console.log(this.model.get('currentSong'))
+      this.playerView.setSong(this.model.get('currentSong'));
     }, this);
   },
+
   render: function () {
-    return this.$el.html([
-      this.libraryView.$el,
-      this.songQueueView.$el,
-      this.playerView.$el
+    this.$el.html([
+      this.playerView.render().el,
+      this.libraryView.render().el,
+      this.songQueueView.render().el
     ]);
   }
 });
